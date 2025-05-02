@@ -21,7 +21,7 @@ const Register = () => {
   const password = watch('password');
 
   const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
-    dispatch(registerUser({ email: data.email, password: data.password }));
+    dispatch(registerUser({ email: data.email, password: data.password, confirmPassword: data.confirmPassword }));
   };
 
   useEffect(() => {
