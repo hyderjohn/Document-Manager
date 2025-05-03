@@ -1,17 +1,28 @@
 import { Outlet } from 'react-router-dom';
 
+/**
+ * Authentication Layout.
+ *
+ * Provides the layout structure for authentication pages (Login, Register).
+ * Centers a content card with a gradient background.
+ * The specific auth form (Login or Register) is rendered via `<Outlet />`.
+ */
 const AuthLayout = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-card p-8">
+    // Full screen container, centering content vertically and horizontally
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-100 to-primary-200 py-12 px-4 sm:px-6 lg:px-8">
+      {/* Content card with white background, padding, and shadow */}
+      <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 space-y-8">
+        {/* Header Section */}
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Document Management
+          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
+            DocManager
           </h2>
-          <h3 className="text-center text-xl text-gray-600 mt-2">
-            System
-          </h3>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in or create an account
+          </p>
         </div>
+        
         <Outlet />
       </div>
     </div>

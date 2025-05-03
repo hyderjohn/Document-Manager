@@ -78,8 +78,8 @@ Follow these steps to set up and run the project locally.
 
 1.  **Clone the repository:**
     ```bash
-    # Replace <repository-url> with the actual URL
-    git clone <repository-url>
+    # Replace your-repository-url-here with the actual URL
+    git clone git@github.com:hyderjohn/document-manager.git
     cd document-manager # Or your specific project directory name
     ```
 2.  **Install dependencies:**
@@ -127,11 +127,11 @@ This command type-checks the code and creates an optimized production build in t
 
 ## Running Tests
 
-This project uses [Test Runner Name - e.g., Vitest, Jest] for running unit and integration tests, and [Testing Library Name - e.g., React Testing Library] for component testing.
+This project is assumed to use **Vitest** for running unit and integration tests, and **React Testing Library** for component testing.
 
 *Ensure you have installed the development dependencies (`npm install` or `yarn install`).*
 
-To run all tests:
+To run all tests once:
 
 ```bash
 # Using npm
@@ -141,36 +141,40 @@ npm test
 yarn test
 ```
 
-To run tests in watch mode (re-runs tests on file changes):
+To run tests in watch mode (interactive, re-runs on file changes):
 
 ```bash
 # Using npm
-npm run test:watch # Verify this script exists in package.json
+npm run test:watch
 
 # Or using yarn
-yarn test:watch # Verify this script exists in package.json
+yarn test:watch
 ```
 
-*(Note: Please verify the test runner and script names in `package.json` and update this section accordingly.)*
+*(Note: These are common script names. Please verify the test runner and script names in your `package.json` and update this section if they differ.)*
 
 ## Linting and Formatting
 
-This project uses ESLint for linting and Prettier for code formatting.
+This project uses **ESLint** for identifying and reporting on patterns in ECMAScript/JavaScript code, and **Prettier** for enforcing consistent code style.
 
 To check for linting errors:
 ```bash
-npm run lint # Verify script in package.json
-# or
-yarn lint # Verify script in package.json
+# Using npm
+npm run lint
+
+# Or using yarn
+yarn lint
 ```
 
-To automatically fix linting and formatting issues:
+To automatically fix linting and formatting issues where possible:
 ```bash
-npm run format # Verify script in package.json
-# or
-yarn format # Verify script in package.json
+# Using npm
+npm run format
+
+# Or using yarn
+yarn format
 ```
-*(Note: Ensure these scripts are defined in `package.json`.)*
+*(Note: These are common script names. Please verify them against your `package.json`.)*
 
 ## Demo Credentials
 
