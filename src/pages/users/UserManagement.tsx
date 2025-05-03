@@ -6,14 +6,23 @@ import {
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
+/**
+ * Interface representing a user account.
+ */
 interface User {
+  /** Unique identifier for the user. */
   id: string;
+  /** User's email address (acts as username). */
   email: string;
+  /** User's role within the system. */
   role: 'admin' | 'user';
+  /** Current status of the user account. */
   status: 'active' | 'inactive';
+  /** ISO timestamp of the user's last login. */
   lastLogin: string;
 }
 
+// TODO: Replace mock data with actual API calls using react-query or Redux Toolkit Query.
 const mockUsers: User[] = [
   {
     id: '1',
@@ -38,10 +47,27 @@ const mockUsers: User[] = [
   },
 ];
 
+/**
+ * User Management Page.
+ *
+ * Displays a list of users and provides functionality to add, delete,
+ * and manage user status. Currently uses mock data and simulated API calls.
+ *
+ * TODO:
+ * - Implement actual API calls for user CRUD operations.
+ * - Add user editing functionality (modal/form).
+ * - Implement pagination and searching/filtering for the user list.
+ * - Add role management capabilities.
+ * - Improve error handling and loading states.
+ */
 const UserManagement = () => {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [isAddingUser, setIsAddingUser] = useState(false);
 
+  /**
+   * Simulates adding a new user.
+   * TODO: Replace with actual API call.
+   */
   const handleAddUser = async () => {
     try {
       setIsAddingUser(true);
@@ -65,6 +91,11 @@ const UserManagement = () => {
     }
   };
 
+  /**
+   * Simulates deleting a user.
+   * TODO: Replace with actual API call.
+   * @param {string} id - The ID of the user to delete.
+   */
   const handleDeleteUser = async (id: string) => {
     try {
       
@@ -76,6 +107,11 @@ const UserManagement = () => {
     }
   };
 
+  /**
+   * Simulates toggling the active/inactive status of a user.
+   * TODO: Replace with actual API call.
+   * @param {string} id - The ID of the user whose status to toggle.
+   */
   const handleToggleStatus = async (id: string) => {
     try {
       

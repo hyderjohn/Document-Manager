@@ -1,5 +1,12 @@
 import { Link } from 'react-router-dom';
 
+/**
+ * Not Found (404) Page Component.
+ *
+ * Displays a user-friendly message when a route is accessed
+ * that does not match any defined routes in the application.
+ * Provides a link to navigate back to the home page.
+ */
 const NotFound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

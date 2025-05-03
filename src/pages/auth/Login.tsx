@@ -1,37 +1,42 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { loginUser } from '../../store/authSlice';
+import { Link } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useAuth } from "../../hooks/useAuth";
 
+/**
+ * Interface defining the structure for login form data.
+ */
 export interface LoginFormData {
+  /**
+   * User's email address.
+   */
   email: string;
+  /**
+   * User's password.
+   */
   password: string;
 }
 
+/**
+ * Login page component.
+ *
+ * Renders the login form and uses the `useAuth` hook to handle
+ * form submission, loading state, and potential errors.
+ */
 const Login = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const { status, error: authError, user } = useSelector((state: RootState) => state.auth);
+  const { handleLogin, isLoading /*, loginError */ } = useAuth(); // loginError available if needed for display
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
-
+  /**
+   * Handles the form submission by calling the login handler from the useAuth hook.
+   * @param {LoginFormData} data - The validated form data.
+   */
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
-    dispatch(loginUser(data));
+    handleLogin(data);
   };
-
-  useEffect(() => {
-    if (status === 'succeeded' && user) {
-      toast.success('Login successful!');
-      navigate('/');
-    } else if (status === 'failed' && authError) {
-      toast.error(authError || 'Invalid credentials');
-    }
-  }, [status, user, authError, navigate]);
-
-  const isLoading = status === 'loading';
 
   return (
     <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -94,4 +99,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

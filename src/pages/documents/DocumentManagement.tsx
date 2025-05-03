@@ -7,12 +7,21 @@ import {
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
+/**
+ * Interface representing a document managed by the system.
+ */
 interface Document {
+  /** Unique identifier for the document. */
   id: string;
+  /** The original filename of the document. */
   name: string;
+  /** The inferred file type (e.g., PDF, DOCX). */
   type: string;
+  /** The size of the file (e.g., "2.4 MB"). */
   size: string;
+  /** ISO timestamp when the document was uploaded. */
   uploadedAt: string;
+  /** The current processing status of the document. */
   status: 'processed' | 'processing' | 'failed';
 }
 
@@ -43,10 +52,30 @@ const mockDocuments: Document[] = [
   },
 ];
 
+/**
+ * Document Management Page.
+ *
+ * Allows users to view, upload, and delete documents.
+ * Displays a list of documents with their status.
+ * Currently uses mock data and simulated API interactions.
+ *
+ * TODO:
+ * - Implement actual API calls for fetching, uploading, and deleting documents.
+ * - Add document preview/view functionality.
+ * - Implement document editing (e.g., renaming).
+ * - Add searching, sorting, and filtering capabilities.
+ * - Show more detailed upload progress.
+ * - Handle different document statuses more robustly (e.g., display error messages).
+ */
 const DocumentManagement = () => {
   const [documents, setDocuments] = useState<Document[]>(mockDocuments);
   const [isUploading, setIsUploading] = useState(false);
 
+  /**
+   * Handles the file input change event to simulate uploading a new document.
+   * TODO: Replace simulation with actual API upload call.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The file input change event.
+   */
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -74,6 +103,11 @@ const DocumentManagement = () => {
     }
   };
 
+  /**
+   * Simulates deleting a document.
+   * TODO: Replace simulation with actual API delete call.
+   * @param {string} id - The ID of the document to delete.
+   */
   const handleDelete = async (id: string) => {
     try {
       
