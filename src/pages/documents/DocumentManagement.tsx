@@ -3,119 +3,135 @@ import {
   DocumentIcon,
   ArrowUpTrayIcon,
   TrashIcon,
-  PencilIcon,
-} from '@heroicons/react/24/outline';
-import toast from 'react-hot-toast';
+  // PencilIcon, // For future edit functionality
+} from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
 
 /**
- * Interface representing a document managed by the system.
+ * Represents a document within the management system.
  */
 interface Document {
-  /** Unique identifier for the document. */
-  id: string;
-  /** The original filename of the document. */
-  name: string;
-  /** The inferred file type (e.g., PDF, DOCX). */
-  type: string;
-  /** The size of the file (e.g., "2.4 MB"). */
-  size: string;
-  /** ISO timestamp when the document was uploaded. */
-  uploadedAt: string;
-  /** The current processing status of the document. */
-  status: 'processed' | 'processing' | 'failed';
+  id: string; // Unique ID
+  name: string; // Original filename
+  type: string; // File type (e.g., PDF, DOCX)
+  size: string; // Formatted file size (e.g., "2.4 MB")
+  uploadedAt: string; // ISO timestamp of upload
+  status: "processed" | "processing" | "failed"; // Processing status
 }
 
+// Mock data - replace with actual API fetching later
 const mockDocuments: Document[] = [
   {
-    id: '1',
-    name: 'Project Proposal.pdf',
-    type: 'PDF',
-    size: '2.4 MB',
-    uploadedAt: '2024-02-20T10:00:00Z',
-    status: 'processed',
+    id: "1",
+    name: "Project Proposal.pdf",
+    type: "PDF",
+    size: "2.4 MB",
+    uploadedAt: "2024-02-20T10:00:00Z",
+    status: "processed",
   },
   {
-    id: '2',
-    name: 'Technical Documentation.docx',
-    type: 'DOCX',
-    size: '1.8 MB',
-    uploadedAt: '2024-02-19T15:30:00Z',
-    status: 'processed',
+    id: "2",
+    name: "Technical Documentation.docx",
+    type: "DOCX",
+    size: "1.8 MB",
+    uploadedAt: "2024-02-19T15:30:00Z",
+    status: "processed",
   },
   {
-    id: '3',
-    name: 'Meeting Notes.txt',
-    type: 'TXT',
-    size: '45 KB',
-    uploadedAt: '2024-02-18T09:15:00Z',
-    status: 'processing',
+    id: "3",
+    name: "Meeting Notes.txt",
+    type: "TXT",
+    size: "45 KB",
+    uploadedAt: "2024-02-18T09:15:00Z",
+    status: "processing",
   },
 ];
 
 /**
  * Document Management Page.
  *
- * Allows users to view, upload, and delete documents.
- * Displays a list of documents with their status.
- * Currently uses mock data and simulated API interactions.
+ * Provides UI for viewing, uploading, and deleting documents.
+ * Displays a table of documents and their current status.
+ * Note: Currently uses local state and mock data simulation.
  *
  * TODO:
- * - Implement actual API calls for fetching, uploading, and deleting documents.
- * - Add document preview/view functionality.
- * - Implement document editing (e.g., renaming).
- * - Add searching, sorting, and filtering capabilities.
- * - Show more detailed upload progress.
- * - Handle different document statuses more robustly (e.g., display error messages).
+ * - Integrate with backend API for document operations (fetch, upload, delete).
+ * - Implement preview/viewing functionality.
+ * - Add editing capabilities (e.g., rename).
+ * - Introduce searching, sorting, and filtering for the table.
+ * - Improve upload feedback (e.g., progress bar).
+ * - Add better handling/display for different statuses (like failure reasons).
  */
 const DocumentManagement = () => {
+  // Local state for documents - replace with react-query or similar
   const [documents, setDocuments] = useState<Document[]>(mockDocuments);
+  // Local state for upload button loading indicator
   const [isUploading, setIsUploading] = useState(false);
 
   /**
-   * Handles the file input change event to simulate uploading a new document.
-   * TODO: Replace simulation with actual API upload call.
-   * @param {React.ChangeEvent<HTMLInputElement>} event - The file input change event.
+   * Mock document upload handler.
+   * Simulates API call and updates local state.
    */
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setIsUploading(true);
+    toast.loading("Uploading file..."); // Add loading toast
+
     try {
-      setIsUploading(true);
-      
+      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
+      // Create mock document entry
       const newDocument: Document = {
-        id: Date.now().toString(),
+        id: `mock-${Date.now()}`,
         name: file.name,
-        type: file.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
+        type: file.name.split(".").pop()?.toUpperCase() || "UNKNOWN",
         size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
         uploadedAt: new Date().toISOString(),
-        status: 'processing',
+        status: "processing", // Assume it starts processing
       };
 
+      // Update local state
       setDocuments((prev) => [newDocument, ...prev]);
-      toast.success('File uploaded successfully');
+      toast.dismiss(); // Dismiss loading toast
+      toast.success("File uploaded, processing started.");
     } catch (error) {
-      toast.error('Failed to upload file');
+      console.error("Upload error:", error);
+      toast.dismiss(); // Dismiss loading toast
+      toast.error("Failed to upload file.");
     } finally {
       setIsUploading(false);
+      // Reset file input to allow uploading the same file again if needed
+      if (event.target) {
+        event.target.value = "";
+      }
     }
   };
 
   /**
-   * Simulates deleting a document.
-   * TODO: Replace simulation with actual API delete call.
-   * @param {string} id - The ID of the document to delete.
+   * Mock document deletion handler.
+   * Simulates API call and updates local state.
    */
   const handleDelete = async (id: string) => {
+    // Optimistic UI update idea: remove immediately, then add back on error?
+    // For now, just simulate delay then remove.
+    const optimisticDocuments = documents;
+    setDocuments((prev) => prev.filter((doc) => doc.id !== id));
+    const deleteToast = toast.loading("Deleting document...");
+
     try {
-      
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setDocuments((prev) => prev.filter((doc) => doc.id !== id));
-      toast.success('Document deleted successfully');
+      toast.dismiss(deleteToast);
+      toast.success("Document deleted.");
     } catch (error) {
-      toast.error('Failed to delete document');
+      console.error("Delete error:", error);
+      toast.dismiss(deleteToast);
+      toast.error("Failed to delete document.");
+      // Rollback optimistic update on error
+      setDocuments(optimisticDocuments);
     }
   };
 

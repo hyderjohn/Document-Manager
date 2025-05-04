@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
 /**
- * Interface defining the structure for login form data.
+ * Data shape for the login form.
  */
 export interface LoginFormData {
   /**
@@ -17,13 +17,14 @@ export interface LoginFormData {
 }
 
 /**
- * Login page component.
+ * Login Page Component.
  *
- * Renders the login form and uses the `useAuth` hook to handle
- * form submission, loading state, and potential errors.
+ * Displays the user login form.
+ * Uses `react-hook-form` for form handling and validation.
+ * Uses the `useAuth` hook to manage the login process and loading state.
  */
 const Login = () => {
-  const { handleLogin, isLoading /*, loginError */ } = useAuth(); // loginError available if needed for display
+  const { handleLogin, isLoading /*, authError */ } = useAuth();
   const {
     register,
     handleSubmit,
@@ -31,8 +32,8 @@ const Login = () => {
   } = useForm<LoginFormData>();
 
   /**
-   * Handles the form submission by calling the login handler from the useAuth hook.
-   * @param {LoginFormData} data - The validated form data.
+   * Callback for form submission.
+   * Passes the validated form data to the `handleLogin` function from `useAuth`.
    */
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     handleLogin(data);

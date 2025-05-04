@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
 /**
- * Interface defining the structure for registration form data.
+ * Defines the data required for the registration form.
  */
 export interface RegisterFormData {
   /** User's email address. */
@@ -15,13 +15,14 @@ export interface RegisterFormData {
 }
 
 /**
- * Registration page component.
+ * Registration Page Component.
  *
- * Renders the registration form and uses the `useAuth` hook
- * to handle form submission, loading state, and feedback.
+ * Provides the UI for new user registration.
+ * Leverages `react-hook-form` for validation (including password match)
+ * and `useAuth` for handling the registration API call and loading state.
  */
 const Register = () => {
-  const { handleRegister, isLoading } = useAuth();
+  const { handleRegister, isLoading /*, authError */ } = useAuth();
 
   const {
     register,
@@ -32,8 +33,8 @@ const Register = () => {
   const password = watch("password");
 
   /**
-   * Handles the form submission by calling the register handler from the useAuth hook.
-   * @param {RegisterFormData} data - The validated form data.
+   * Form submission handler.
+   * Invokes the `handleRegister` function from `useAuth` with validated data.
    */
   const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
     handleRegister(data);

@@ -1,5 +1,5 @@
 /**
- * Interface representing a user object returned by the authentication service.
+ * Shape of the User object used within the authentication context.
  */
 export interface User {
   /** Unique identifier for the user. */
@@ -11,7 +11,7 @@ export interface User {
 }
 
 /**
- * Interface representing the successful response from authentication endpoints.
+ * Expected response structure for successful authentication calls.
  */
 interface AuthResponse {
   /** The authenticated user object. */
@@ -23,64 +23,53 @@ interface AuthResponse {
 /**
  * Mock Authentication Service.
  *
- * Provides methods simulating user login and registration.
- * Uses hardcoded credentials and timeouts to mimic API calls.
+ * Simulates backend API calls for login and registration.
+ * Uses hardcoded credentials and timeouts.
  *
- * TODO: Replace this mock service with actual API calls to a backend
- * using a library like Axios or Fetch, potentially integrated via RTK Query.
+ * IMPORTANT: Replace this with actual API calls before production!
  */
 export const mockAuthService = {
   /**
-   * Simulates user login.
-   * @param {string} email - The user's email.
-   * @param {string} password - The user's password.
-   * @returns {Promise<AuthResponse>} A promise resolving with the user and token.
-   * @throws {Error} If credentials are invalid.
+   * Mock login function.
+   * Checks against hardcoded admin/user credentials.
    */
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    console.log(`Attempting login for: ${email}`); // Added for debugging
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+    console.log(`Mock Login Attempt: ${email}`);
+    await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate delay
 
-    // Check for admin credentials
     if (email === "admin@example.com" && password === "admin123") {
-      console.log("Admin login successful");
+      console.log("Mock Admin login success");
       return {
-        user: { id: "1", email: "admin@example.com", role: "admin" as const },
-        token: "mock-admin-token-xyz789", // Made token slightly more unique
+        user: { id: "1", email: "admin@example.com", role: "admin" }, // Removed unnecessary 'as const'
+        token: "mock-admin-token-xyz789",
       };
     }
-
-    // Check for user credentials
     if (email === "user@example.com" && password === "user123") {
-      console.log("User login successful");
+      console.log("Mock User login success");
       return {
-        user: { id: "2", email: "user@example.com", role: "user" as const },
-        token: "mock-user-token-abc123", // Made token slightly more unique
+        user: { id: "2", email: "user@example.com", role: "user" }, // Removed unnecessary 'as const'
+        token: "mock-user-token-abc123",
       };
     }
 
-    // Invalid credentials
-    console.error("Login failed: Invalid credentials");
+    console.error("Mock Login Failed: Invalid credentials");
     throw new Error("Invalid credentials");
   },
 
   /**
-   * Simulates user registration.
-   * @param {string} email - The user's email.
-   * @param {string} password - The user's password.
-   * @returns {Promise<AuthResponse>} A promise resolving with the newly created user and token.
+   * Mock registration function.
+   * Always succeeds for demonstration purposes.
    */
   register: async (email: string, password: string): Promise<AuthResponse> => {
-    // Basic validation added
     if (!email || !password) {
-      throw new Error("Email and password are required for registration.");
+      // Added simple validation check
+      throw new Error("Mock Service: Email and password are required.");
     }
-    console.log(`Attempting registration for: ${email}`);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+    console.log(`Mock Registration Attempt: ${email}`);
+    await new Promise((resolve) => setTimeout(resolve, 1200)); // Simulate longer delay
 
-    // Always succeed for mock purposes
-    const newUser: User = { id: Date.now().toString(), email, role: "user" as const };
-    console.log("Registration successful for:", newUser);
+    const newUser: User = { id: `mock-${Date.now()}`, email, role: "user" };
+    console.log("Mock Registration Success:", newUser);
     return {
       user: newUser,
       token: `mock-new-user-token-${newUser.id}`,

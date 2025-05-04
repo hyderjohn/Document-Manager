@@ -4,22 +4,16 @@ import { LoginFormData } from "../pages/auth/Login";
 import { RegisterFormData } from "../pages/auth/Register";
 
 /**
- * Interface defining the structure of the authentication state in the Redux store.
+ * Defines the shape of the authentication state managed by Redux.
  */
 interface AuthState {
-  /** The authenticated user object, or null if not logged in. */
-  user: User | null;
-  /** The authentication token (e.g., JWT), or null if not logged in. */
-  token: string | null;
-  /** The current status of async operations (login, register). */
-  status: "idle" | "loading" | "succeeded" | "failed";
-  /** Stores any error message from failed async operations. */
-  error: string | null;
+  user: User | null;       // Current user data, or null if logged out
+  token: string | null;    // Auth token (JWT), or null
+  status: "idle" | "loading" | "succeeded" | "failed"; // Status of async login/register ops
+  error: string | null;    // Error message from failed operations
 }
 
-/**
- * The initial state for the authentication slice.
- */
+/** Initial state when the app loads */
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -28,37 +22,30 @@ const initialState: AuthState = {
 };
 
 /**
- * Async thunk action for handling user login.
- *
- * Calls the authentication service's login method and handles success/error cases.
- * Dispatches pending, fulfilled, or rejected actions based on the API call result.
+ * Thunk action: Handles user login via the auth service.
  */
 export const loginUser = createAsyncThunk(
-  "auth/loginUser", // Action type prefix
+  "auth/loginUser", // Action type used internally by Redux Toolkit
   async (credentials: LoginFormData, { rejectWithValue }) => {
     try {
-      // TODO: Replace mockAuthService with actual service call
+      // Replace with actual service call when backend is ready
       const response = await mockAuthService.login(credentials.email, credentials.password);
-      // On success, the response (user and token) is returned and becomes the fulfilled action payload
-      return response;
+      return response; // Fulfilled action payload
     } catch (error) {
-      // On error, return the error message to be the rejected action payload
+      // Return error message as rejected action payload
       return rejectWithValue((error as Error).message || "Login failed");
     }
   }
 );
 
 /**
- * Async thunk action for handling user registration.
- *
- * Calls the authentication service's register method.
- * Dispatches pending, fulfilled, or rejected actions.
+ * Thunk action: Handles user registration via the auth service.
  */
 export const registerUser = createAsyncThunk(
-  "auth/registerUser", // Action type prefix
+  "auth/registerUser",
   async (credentials: RegisterFormData, { rejectWithValue }) => {
     try {
-      // TODO: Replace mockAuthService with actual service call
+      // Replace with actual service call
       const response = await mockAuthService.register(credentials.email, credentials.password);
       return response;
     } catch (error) {
@@ -68,57 +55,47 @@ export const registerUser = createAsyncThunk(
 );
 
 /**
- * Redux Toolkit slice for managing authentication state.
- *
- * Includes the initial state, reducers for synchronous actions (logout),
- * and extra reducers to handle the lifecycle of async thunk actions (loginUser, registerUser).
+ * Auth slice containing reducers and async action handlers.
  */
 const authSlice = createSlice({
-  name: "auth", // Slice name, used in action types
+  name: "auth",
   initialState,
+  // Reducers for synchronous state updates
   reducers: {
-    /**
-     * Reducer action to log the user out.
-     * Resets user, token, status, and error to initial values.
-     * @param {AuthState} state - The current authentication state.
-     */
+    /** Logs the user out by resetting state. */
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.status = "idle";
       state.error = null;
-      // Optionally, clear token from localStorage/sessionStorage here
+      // Consider clearing token from localStorage/sessionStorage here too
     },
-    /**
-     * Reducer action to clear the authentication error state.
-     * Can be dispatched manually after displaying an error to the user.
-     * @param {AuthState} state - The current authentication state.
-     */
+    /** Clears any existing authentication error message. */
     clearAuthError: (state) => {
       state.error = null;
-    },
+    }
   },
-  // Handlers for async thunk actions
+  // Handlers for the async thunks (loginUser, registerUser)
   extraReducers: (builder) => {
     builder
-      // --- Login User --- //
+      // Login states
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
-        state.error = null; // Clear previous errors on new attempt
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
         state.status = "succeeded";
         state.user = action.payload.user;
         state.token = action.payload.token;
-        // Optionally, store token in localStorage/sessionStorage here
+        // Consider storing token in localStorage/sessionStorage for persistence
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload as string; // Error message from rejectWithValue
-        state.user = null; // Ensure user/token are cleared on failed login
+        state.error = action.payload as string;
+        state.user = null;
         state.token = null;
       })
-      // --- Register User --- //
+      // Register states
       .addCase(registerUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -127,7 +104,7 @@ const authSlice = createSlice({
         state.status = "succeeded";
         state.user = action.payload.user;
         state.token = action.payload.token;
-        // Optionally, store token in localStorage/sessionStorage here
+        // Consider storing token
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
@@ -138,8 +115,8 @@ const authSlice = createSlice({
   },
 });
 
-// Export the synchronous actions
+// Export synchronous actions generated by createSlice
 export const { logout, clearAuthError } = authSlice.actions;
 
-// Export the reducer function for the store configuration
+// Export the reducer to be included in the store
 export default authSlice.reducer;

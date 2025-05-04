@@ -4,28 +4,33 @@ import authReducer from './authSlice';
 // e.g., import documentsReducer from './documentsSlice';
 
 /**
- * Configures and creates the Redux store.
+ * Configures the main Redux store for the application.
  *
- * Combines all slice reducers into a single root reducer.
- * Includes Redux DevTools Extension support and default middleware (like redux-thunk) automatically.
+ * Uses `configureStore` from Redux Toolkit, which simplifies setup:
+ * - Combines slice reducers.
+ * - Adds necessary middleware (like redux-thunk for async actions).
+ * - Enables Redux DevTools Extension integration.
  */
 export const store = configureStore({
   reducer: {
-    // Add slice reducers here
+    // Register slice reducers here. The key name determines the state property name.
     auth: authReducer,
     // documents: documentsReducer, // Example of adding another slice
   },
-  // Middleware and DevTools are configured by default, but can be customized here if needed
+  // `middleware` and `devTools` are automatically configured.
+  // Customization is possible but often not needed initially.
 });
 
 /**
- * Type representing the complete state of the Redux store.
- * Inferred automatically from the store configuration.
+ * Represents the type of the entire Redux state tree.
+ * Automatically inferred from the `store` configuration.
+ * Use this type for `useSelector` hooks.
  */
 export type RootState = ReturnType<typeof store.getState>;
 
 /**
- * Type representing the dispatch function for the Redux store.
- * Includes types for dispatching standard actions and thunks.
+ * Represents the specific dispatch function type for this store.
+ * Includes types for thunks as well as standard actions.
+ * Use this type for `useDispatch` hooks and when dispatching thunks.
  */
 export type AppDispatch = typeof store.dispatch; 

@@ -8,12 +8,12 @@ import { LoginFormData } from "../pages/auth/Login"; // Adjust path if needed
 import { RegisterFormData } from "../pages/auth/Register"; // Adjust path if needed
 
 /**
- * Custom hook for handling authentication logic.
+ * Centralized hook for authentication operations.
  *
- * Encapsulates interactions with the auth slice of the Redux store,
- * manages side effects like navigation and toasts based on auth status.
+ * Handles interactions with the Redux auth state (dispatching actions, selecting state)
+ * and manages related side-effects like navigation and toast notifications.
  *
- * @returns {object} An object containing authentication state and actions.
+ * @returns Authentication state and handler functions.
  */
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -21,23 +21,25 @@ export const useAuth = () => {
   const { status, error: authError, user } = useSelector((state: RootState) => state.auth);
 
   /**
-   * Dispatches the loginUser action with the provided form data.
-   * @param {LoginFormData} data - The user's login credentials.
+   * Triggers the user login process.
+   * @param data User login credentials.
    */
   const handleLogin = (data: LoginFormData) => {
     dispatch(loginUser(data));
   };
 
   /**
-   * Dispatches the registerUser action with the provided form data.
-   * @param {RegisterFormData} data - The user's registration details.
+   * Triggers the user registration process.
+   * @param data User registration details.
    */
   const handleRegister = (data: RegisterFormData) => {
+    // Note: Uses the same status/error flags in authSlice as login.
+    // Separate flags might be needed if more distinct feedback is required.
     dispatch(registerUser({ email: data.email, password: data.password, confirmPassword: data.confirmPassword }));
   };
 
   /**
-   * Dispatches the logout action and navigates to the login page.
+   * Logs the user out, shows feedback, and redirects to login.
    */
   const handleLogout = () => {
     dispatch(logout());
@@ -45,37 +47,36 @@ export const useAuth = () => {
     navigate("/login");
   };
 
-  // Effect to handle post-authentication actions (navigation, toasts)
+  // Handle side effects after auth status changes
   useEffect(() => {
-    // Navigate to dashboard on successful login/registration
     if (status === "succeeded" && user) {
-      toast.success("Authentication successful!");
+      // Redirect on successful login or registration
+      toast.success("Authentication successful!"); // Generic success message for now
       navigate("/");
-    }
-    // Show error toast on failure
-    else if (status === "failed" && authError) {
+    } else if (status === "failed" && authError) {
+      // Show error toast and clear the error state
       toast.error(authError || "Authentication failed");
-      // Clear the error after showing it so it doesn't persist
-      dispatch(clearAuthError());
+      dispatch(clearAuthError()); // Prevent error from sticking around
     }
   }, [status, user, authError, navigate, dispatch]);
 
-  /**
-   * Boolean indicating if an authentication operation (login, register) is in progress.
-   */
+  /** True if login or register is currently in progress. */
   const isLoading = status === "loading";
 
-  // Ensure the return object includes all handlers
   return {
-    /** The current status of the authentication request ('idle', 'loading', 'succeeded', 'failed'). */
+    /** Current auth request status: 'idle', 'loading', 'succeeded', 'failed'. */
     authStatus: status,
-    /** Any error message returned from the last failed authentication attempt. */
+    /** Error message from the last failed auth attempt, if any. */
     authError,
-    /** The currently authenticated user object, or null if not logged in. */
+    /** The logged-in user object, or null. */
     loggedInUser: user,
+    /** Loading state flag. */
     isLoading,
+    /** Function to initiate login. */
     handleLogin,
-    handleRegister, // Explicitly ensure handleRegister is returned
+    /** Function to initiate registration. */
+    handleRegister,
+    /** Function to initiate logout. */
     handleLogout,
   };
 };

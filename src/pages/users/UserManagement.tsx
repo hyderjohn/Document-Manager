@@ -7,22 +7,17 @@ import {
 import toast from 'react-hot-toast';
 
 /**
- * Interface representing a user account.
+ * Describes a user account in the system.
  */
 interface User {
-  /** Unique identifier for the user. */
-  id: string;
-  /** User's email address (acts as username). */
-  email: string;
-  /** User's role within the system. */
-  role: 'admin' | 'user';
-  /** Current status of the user account. */
-  status: 'active' | 'inactive';
-  /** ISO timestamp of the user's last login. */
-  lastLogin: string;
+  id: string;         // Unique ID
+  email: string;      // Email address (acts as username)
+  role: 'admin' | 'user'; // User role
+  status: 'active' | 'inactive'; // Account status
+  lastLogin: string;  // ISO timestamp of last login
 }
 
-// TODO: Replace mock data with actual API calls using react-query or Redux Toolkit Query.
+// Mock data for demonstration - should be replaced by API data fetching.
 const mockUsers: User[] = [
   {
     id: '1',
@@ -48,43 +43,47 @@ const mockUsers: User[] = [
 ];
 
 /**
- * User Management Page.
+ * User Management Admin Page.
  *
- * Displays a list of users and provides functionality to add, delete,
- * and manage user status. Currently uses mock data and simulated API calls.
+ * Allows admins to view, add, delete, and manage user statuses.
+ * Note: Current implementation uses local state and simulated API calls.
  *
- * TODO:
- * - Implement actual API calls for user CRUD operations.
- * - Add user editing functionality (modal/form).
- * - Implement pagination and searching/filtering for the user list.
- * - Add role management capabilities.
- * - Improve error handling and loading states.
+ * Enhancements Needed:
+ * - Fetch/manage user data via API (e.g., using react-query, RTK Query, or custom hooks).
+ * - Implement user editing (e.g., change role, requires a form/modal).
+ * - Add table features: pagination, searching, sorting.
+ * - Improve loading and error state handling for API calls.
  */
 const UserManagement = () => {
+  // Local state holding user data (replace with server state management)
   const [users, setUsers] = useState<User[]>(mockUsers);
+  // State to manage loading indicator for the Add User button
   const [isAddingUser, setIsAddingUser] = useState(false);
 
   /**
-   * Simulates adding a new user.
-   * TODO: Replace with actual API call.
+   * Mock handler for adding a new user.
    */
   const handleAddUser = async () => {
+    setIsAddingUser(true);
+    const addToast = toast.loading('Adding user...');
     try {
-      setIsAddingUser(true);
-      
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      // Create a mock new user
       const newUser: User = {
-        id: Date.now().toString(),
-        email: `user${Date.now()}@example.com`,
+        id: `mock-${Date.now()}`,
+        email: `newuser${Date.now().toString().slice(-4)}@example.com`,
         role: 'user',
         status: 'active',
         lastLogin: new Date().toISOString(),
       };
-
+      // Update local state
       setUsers((prev) => [...prev, newUser]);
+      toast.dismiss(addToast);
       toast.success('User added successfully');
     } catch (error) {
+      console.error("Add user error:", error);
+      toast.dismiss(addToast);
       toast.error('Failed to add user');
     } finally {
       setIsAddingUser(false);
@@ -92,43 +91,55 @@ const UserManagement = () => {
   };
 
   /**
-   * Simulates deleting a user.
-   * TODO: Replace with actual API call.
-   * @param {string} id - The ID of the user to delete.
+   * Mock handler for deleting a user.
+   * @param id The ID of the user to delete.
    */
   const handleDeleteUser = async (id: string) => {
+    // Example of optimistic update
+    const originalUsers = users;
+    setUsers((prev) => prev.filter((user) => user.id !== id));
+    const deleteToast = toast.loading('Deleting user...');
+
     try {
-      
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setUsers((prev) => prev.filter((user) => user.id !== id));
-      toast.success('User deleted successfully');
-    } catch (error) {
+      toast.dismiss(deleteToast);
+      toast.success('User deleted');
+    } catch (error) { // Handle potential API errors
+      console.error("Delete user error:", error);
+      toast.dismiss(deleteToast);
       toast.error('Failed to delete user');
+      // Rollback UI on error
+      setUsers(originalUsers);
     }
   };
 
   /**
-   * Simulates toggling the active/inactive status of a user.
-   * TODO: Replace with actual API call.
-   * @param {string} id - The ID of the user whose status to toggle.
+   * Mock handler for toggling user status (active/inactive).
+   * @param id The ID of the user to update.
    */
   const handleToggleStatus = async (id: string) => {
+    // Find the current status to show appropriate loading message
+    const currentStatus = users.find(u => u.id === id)?.status;
+    const action = currentStatus === 'active' ? 'Deactivating' : 'Activating';
+    const statusToast = toast.loading(`${action} user...`);
+
     try {
-      
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
+      // Update local state
       setUsers((prev) =>
         prev.map((user) =>
-          user.id === id
-            ? {
-                ...user,
-                status: user.status === 'active' ? 'inactive' : 'active',
-              }
-            : user
+          user.id === id ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' } : user
         )
       );
-      toast.success('User status updated successfully');
+      toast.dismiss(statusToast);
+      toast.success('User status updated');
     } catch (error) {
+      console.error("Toggle status error:", error);
+      toast.dismiss(statusToast);
       toast.error('Failed to update user status');
+      // Note: No rollback here, as the state mapping itself didn't fail
     }
   };
 

@@ -1,19 +1,19 @@
 import { ChartBarIcon, DocumentDuplicateIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 /**
- * Dashboard Page Component.
+ * Main Dashboard Page.
  *
- * Displays a summary of key metrics and recent activity.
- * Currently shows static placeholder data.
+ * Shows an overview of important application metrics and activity.
+ * Note: Currently uses static placeholder values.
  *
- * TODO:
- * - Fetch actual data for dashboard metrics (total documents, users, queue) using react-query or RTK Query.
- * - Implement the "Recent Activity" feed.
- * - Implement the "Document Status Overview" chart (e.g., using Chart.js or a similar library).
- * - Potentially add links from the metric cards to relevant management pages.
+ * Future Work:
+ * - Fetch real data for metric cards (documents, users, queue).
+ * - Implement the "Recent Activity" component.
+ * - Implement the "Document Status Overview" chart.
+ * - Consider linking cards to respective management pages.
  */
 const Dashboard = () => {
-  // TODO: Replace these with fetched data
+  // Placeholder data - replace with actual data fetching (e.g., react-query)
   const totalDocuments = 1234;
   const activeUsers = 56;
   const processingQueue = 7;
@@ -22,9 +22,9 @@ const Dashboard = () => {
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
-      {/* Summary Metric Cards */}
+      {/* Top row: Key metric cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        {/* Total Documents Card */}
+        {/* Card: Total Documents */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex items-center">
             <DocumentDuplicateIcon className="h-8 w-8 text-primary-500 mr-4" />
@@ -34,7 +34,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        {/* Active Users Card */}
+        {/* Card: Active Users */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex items-center">
             <UsersIcon className="h-8 w-8 text-green-500 mr-4" />
@@ -44,7 +44,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        {/* Processing Queue Card */}
+        {/* Card: Processing Queue */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex items-center">
             <ChartBarIcon className="h-8 w-8 text-yellow-500 mr-4" />
@@ -56,18 +56,18 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Additional Dashboard Sections (Activity, Charts) */}
+      {/* Bottom row: Activity and Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity Section */}
+        {/* Section: Recent Activity */}
         <div className="bg-white p-6 rounded-lg shadow-md h-64">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Recent Activity</h2>
-          {/* TODO: Implement activity feed component */}
+          {/* TODO: Insert activity feed component here */}
           <p className="text-gray-500">Placeholder for recent activity feed...</p>
         </div>
-        {/* Document Status Overview Section */}
+        {/* Section: Document Status Overview */}
         <div className="bg-white p-6 rounded-lg shadow-md h-64">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Document Status Overview</h2>
-          {/* TODO: Implement chart component */}
+          {/* TODO: Insert chart component here */}
           <p className="text-gray-500">Placeholder for a chart...</p>
         </div>
       </div>

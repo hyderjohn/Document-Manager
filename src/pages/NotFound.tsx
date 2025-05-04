@@ -1,31 +1,31 @@
 import { Link } from 'react-router-dom';
 
 /**
- * Not Found (404) Page Component.
+ * Standard 404 "Not Found" Page.
  *
- * Displays a user-friendly message when a route is accessed
- * that does not match any defined routes in the application.
- * Provides a link to navigate back to the home page.
+ * This component is displayed via the catch-all route in `App.tsx`
+ * when no other route matches the current URL.
+ * Offers a link back to the application's home page.
  */
 const NotFound = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 text-center">
         <div>
-          <h1 className="text-9xl font-extrabold text-primary-600">404</h1>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Page not found
+          <h1 className="text-8xl sm:text-9xl font-extrabold text-primary-600 tracking-tight">404</h1>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-gray-900">
+            Oops! Page not found.
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            The page you're looking for doesn't exist or has been moved.
+          <p className="mt-2 text-base text-gray-600">
+            Sorry, we couldn’t find the page you’re looking for.
           </p>
         </div>
         <div>
           <Link
             to="/"
-            className="btn btn-primary inline-flex items-center"
+            className="btn btn-primary inline-flex items-center px-6 py-3 text-base font-medium"
           >
-            Go back home
+            Go Back Home
           </Link>
         </div>
       </div>
@@ -33,4 +33,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound; 
+export default NotFound;

@@ -1,38 +1,32 @@
 import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { useAuth } from "../../hooks/useAuth";
 
 /**
- * Props for the ProtectedRoute component.
+ * Props expected by the ProtectedRoute component.
  */
 interface ProtectedRouteProps {
-  /**
-   * The child elements to render if the user is authenticated.
-   */
+  /** The content to render if the user is authenticated. */
   children: React.ReactNode;
 }
 
 /**
- * A component that wraps routes requiring authentication.
+ * Wraps routes that require user authentication.
  *
- * It checks the authentication status from the Redux store.
- * If the user is authenticated, it renders the child components.
- * Otherwise, it redirects the user to the login page.
- *
- * @param {ProtectedRouteProps} props - The component props.
- * @returns {React.ReactElement} The child components or a Redirect component.
+ * Checks authentication status using the `useAuth` hook.
+ * Renders the route's content (`children`) if logged in,
+ * otherwise redirects to the `/login` page.
  */
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  // TODO: Consider using the `loggedInUser` from the `useAuth` hook
-  // instead of directly selecting from the store here for consistency.
-  const { user /*, token */ } = useSelector((state: RootState) => state.auth);
+  // Get user status from the central auth hook
+  const { loggedInUser } = useAuth();
 
-  if (!user) {
-    // User not logged in, redirect to login page
+  if (!loggedInUser) {
+    // User not authenticated, redirect to login
+    // `replace` prevents the current (protected) URL from entering browser history
     return <Navigate to="/login" replace />;
   }
 
-  // User is logged in, render the requested route's component
+  // User authenticated, render the intended child component(s)
   return <>{children}</>;
 };
 
