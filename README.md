@@ -78,7 +78,6 @@ Follow these steps to set up and run the project locally.
 
 1.  **Clone the repository:**
     ```bash
-    # Replace your-repository-url-here with the actual URL
     git clone git@github.com:hyderjohn/document-manager.git
     cd document-manager # Or your specific project directory name
     ```
