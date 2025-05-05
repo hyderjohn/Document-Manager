@@ -1,24 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store"; // Adjust path if needed
-import { loginUser, registerUser, logout, clearAuthError } from "../store/authSlice"; // Adjust path if needed
-import { LoginFormData } from "../pages/auth/Login"; // Adjust path if needed
-import { RegisterFormData } from "../pages/auth/Register"; // Adjust path if needed
+import { AppDispatch, RootState } from "../store/store";
+import { loginUser, registerUser, logout, clearAuthError } from "../store/authSlice";
+import { LoginFormData } from "../pages/auth/Login";
+import { RegisterFormData } from "../pages/auth/Register";
 
 /**
- * Centralized hook for authentication operations.
- *
- * Handles interactions with the Redux auth state (dispatching actions, selecting state)
- * and manages related side-effects like navigation and toast notifications.
- *
- * @returns Authentication state and handler functions.
+ * Hook managing authentication state and actions.
  */
 export const useAuth = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { status, error: authError, user } = useSelector((state: RootState) => state.auth);
+
+  // Ref to track the previous status, initialized with current status
+  const prevStatusRef = useRef<typeof status>(status);
 
   /**
    * Triggers the user login process.
@@ -33,8 +31,6 @@ export const useAuth = () => {
    * @param data User registration details.
    */
   const handleRegister = (data: RegisterFormData) => {
-    // Note: Uses the same status/error flags in authSlice as login.
-    // Separate flags might be needed if more distinct feedback is required.
     dispatch(registerUser({ email: data.email, password: data.password, confirmPassword: data.confirmPassword }));
   };
 
@@ -49,15 +45,17 @@ export const useAuth = () => {
 
   // Handle side effects after auth status changes
   useEffect(() => {
-    if (status === "succeeded" && user) {
-      // Redirect on successful login or registration
-      toast.success("Authentication successful!"); // Generic success message for now
+    // Only show success toast on transition from loading to succeeded
+    if (status === "succeeded" && prevStatusRef.current === "loading" && user) {
+      toast.success("Authentication successful!");
       navigate("/");
     } else if (status === "failed" && authError) {
-      // Show error toast and clear the error state
       toast.error(authError || "Authentication failed");
-      dispatch(clearAuthError()); // Prevent error from sticking around
+      dispatch(clearAuthError());
     }
+
+    // Update previous status ref *after* checking the transition
+    prevStatusRef.current = status;
   }, [status, user, authError, navigate, dispatch]);
 
   /** True if login or register is currently in progress. */

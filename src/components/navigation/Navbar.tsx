@@ -2,45 +2,30 @@ import { Fragment } from 'react';
 import { Link } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import { UserCircleIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
-import { useAuth } from "../../hooks/useAuth"; // Use central auth hook
+import { useAuth } from "../../hooks/useAuth";
 
-/**
- * Top Navigation Bar.
- *
- * Sits above the main content area in `MainLayout`.
- * Displays the application title/logo and a user menu (if logged in).
- * Uses `useAuth` hook for user info and logout action.
- */
+/** Top navigation bar component */
 const Navbar = () => {
-  // Get user data and logout function from the auth hook
   const { loggedInUser: user, handleLogout } = useAuth();
 
   return (
     <nav className="bg-white shadow-sm md:pl-64 fixed top-0 left-0 right-0 z-20 h-16">
-      {" "}
-      {/* Added fixed positioning */}
       <div className="px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full">
-          {" "}
-          {/* Centered items vertically */}
-          {/* Left side: App Title/Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              {/* TODO: Consider replacing text with an SVG/Image logo */}
               <span className="text-xl font-bold text-primary-600">DocManager</span>
             </Link>
           </div>
-          {/* Right side: User Actions Menu (appears only if logged in) */}
+
           {user && (
             <div className="flex items-center">
               <Menu as="div" className="ml-3 relative">
-                {/* Menu Button: User Icon */}
                 <Menu.Button className="flex items-center p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                   <span className="sr-only">Open user menu</span>
                   <UserCircleIcon className="h-8 w-8" aria-hidden="true" />
                 </Menu.Button>
 
-                {/* Dropdown Panel (using Headless UI Transition) */}
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"
@@ -51,21 +36,17 @@ const Navbar = () => {
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-30">
-                    {" "}
-                    {/* Increased z-index */}
                     <div className="py-1">
-                      {/* User Info */}
                       <div className="px-4 py-3 border-b border-gray-200">
                         <p className="text-sm font-medium text-gray-900 truncate">Signed in as</p>
                         <p className="text-sm text-gray-500 truncate" title={user.email}>
                           {user.email}
                         </p>
                       </div>
-                      {/* Logout Action */}
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            onClick={handleLogout} // Trigger logout from useAuth hook
+                            onClick={handleLogout}
                             className={`${
                               active ? "bg-gray-100" : ""
                             } group flex w-full items-center px-4 py-2 text-sm text-gray-700`}
@@ -78,7 +59,6 @@ const Navbar = () => {
                           </button>
                         )}
                       </Menu.Item>
-                      {/* Add other items like Profile/Settings links here later */}
                     </div>
                   </Menu.Items>
                 </Transition>
@@ -91,4 +71,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

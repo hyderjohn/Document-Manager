@@ -1,12 +1,6 @@
 import { Link } from 'react-router-dom';
 
-/**
- * Standard 404 "Not Found" Page.
- *
- * This component is displayed via the catch-all route in `App.tsx`
- * when no other route matches the current URL.
- * Offers a link back to the application's home page.
- */
+/** 404 Not Found Page */
 const NotFound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -17,7 +11,7 @@ const NotFound = () => {
             Oops! Page not found.
           </h2>
           <p className="mt-2 text-base text-gray-600">
-            Sorry, we couldn’t find the page you’re looking for.
+            Sorry, we couldn't find the page you're looking for.
           </p>
         </div>
         <div>

@@ -1,25 +1,18 @@
 import { useState } from 'react';
-import {
-  DocumentIcon,
-  ArrowUpTrayIcon,
-  TrashIcon,
-  // PencilIcon, // For future edit functionality
-} from "@heroicons/react/24/outline";
+import { DocumentIcon, ArrowUpTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 
-/**
- * Represents a document within the management system.
- */
+/** Structure for document data */
 interface Document {
-  id: string; // Unique ID
-  name: string; // Original filename
-  type: string; // File type (e.g., PDF, DOCX)
-  size: string; // Formatted file size (e.g., "2.4 MB")
-  uploadedAt: string; // ISO timestamp of upload
-  status: "processed" | "processing" | "failed"; // Processing status
+  id: string;
+  name: string;
+  type: string;
+  size: string;
+  uploadedAt: string;
+  status: "processed" | "processing" | "failed";
 }
 
-// Mock data - replace with actual API fetching later
+// Mock data
 const mockDocuments: Document[] = [
   {
     id: "1",
@@ -47,82 +40,51 @@ const mockDocuments: Document[] = [
   },
 ];
 
-/**
- * Document Management Page.
- *
- * Provides UI for viewing, uploading, and deleting documents.
- * Displays a table of documents and their current status.
- * Note: Currently uses local state and mock data simulation.
- *
- * TODO:
- * - Integrate with backend API for document operations (fetch, upload, delete).
- * - Implement preview/viewing functionality.
- * - Add editing capabilities (e.g., rename).
- * - Introduce searching, sorting, and filtering for the table.
- * - Improve upload feedback (e.g., progress bar).
- * - Add better handling/display for different statuses (like failure reasons).
- */
+/** Document Management page */
 const DocumentManagement = () => {
-  // Local state for documents - replace with react-query or similar
   const [documents, setDocuments] = useState<Document[]>(mockDocuments);
-  // Local state for upload button loading indicator
   const [isUploading, setIsUploading] = useState(false);
 
-  /**
-   * Mock document upload handler.
-   * Simulates API call and updates local state.
-   */
+  /** Mock file upload handler */
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setIsUploading(true);
-    toast.loading("Uploading file..."); // Add loading toast
+    toast.loading("Uploading file...");
 
     try {
-      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Create mock document entry
       const newDocument: Document = {
         id: `mock-${Date.now()}`,
         name: file.name,
         type: file.name.split(".").pop()?.toUpperCase() || "UNKNOWN",
         size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
         uploadedAt: new Date().toISOString(),
-        status: "processing", // Assume it starts processing
+        status: "processing",
       };
-
-      // Update local state
       setDocuments((prev) => [newDocument, ...prev]);
-      toast.dismiss(); // Dismiss loading toast
+      toast.dismiss();
       toast.success("File uploaded, processing started.");
     } catch (error) {
       console.error("Upload error:", error);
-      toast.dismiss(); // Dismiss loading toast
+      toast.dismiss();
       toast.error("Failed to upload file.");
     } finally {
       setIsUploading(false);
-      // Reset file input to allow uploading the same file again if needed
       if (event.target) {
         event.target.value = "";
       }
     }
   };
 
-  /**
-   * Mock document deletion handler.
-   * Simulates API call and updates local state.
-   */
+  /** Mock file deletion handler */
   const handleDelete = async (id: string) => {
-    // Optimistic UI update idea: remove immediately, then add back on error?
-    // For now, just simulate delay then remove.
     const optimisticDocuments = documents;
     setDocuments((prev) => prev.filter((doc) => doc.id !== id));
     const deleteToast = toast.loading("Deleting document...");
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
       toast.dismiss(deleteToast);
       toast.success("Document deleted.");
@@ -130,7 +92,6 @@ const DocumentManagement = () => {
       console.error("Delete error:", error);
       toast.dismiss(deleteToast);
       toast.error("Failed to delete document.");
-      // Rollback optimistic update on error
       setDocuments(optimisticDocuments);
     }
   };

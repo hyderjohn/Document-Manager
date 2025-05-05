@@ -2,39 +2,17 @@ import { Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
-/**
- * Data shape for the login form.
- */
+/** Login form data structure */
 export interface LoginFormData {
-  /**
-   * User's email address.
-   */
   email: string;
-  /**
-   * User's password.
-   */
   password: string;
 }
 
-/**
- * Login Page Component.
- *
- * Displays the user login form.
- * Uses `react-hook-form` for form handling and validation.
- * Uses the `useAuth` hook to manage the login process and loading state.
- */
+/** Login Page */
 const Login = () => {
-  const { handleLogin, isLoading /*, authError */ } = useAuth();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>();
+  const { handleLogin, isLoading } = useAuth();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
 
-  /**
-   * Callback for form submission.
-   * Passes the validated form data to the `handleLogin` function from `useAuth`.
-   */
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     handleLogin(data);
   };
@@ -50,6 +28,7 @@ const Login = () => {
             {...register("email", { required: "Email is required" })}
             id="email"
             type="email"
+            autoComplete="email"
             disabled={isLoading}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm disabled:opacity-50 disabled:bg-gray-100"
             placeholder="Enter your email"
@@ -64,6 +43,7 @@ const Login = () => {
             {...register("password", { required: "Password is required" })}
             id="password"
             type="password"
+            autoComplete="current-password"
             disabled={isLoading}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm disabled:opacity-50 disabled:bg-gray-100"
             placeholder="Enter your password"

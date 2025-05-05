@@ -1,53 +1,34 @@
-/**
- * Shape of the User object used within the authentication context.
- */
+/** User object structure */
 export interface User {
-  /** Unique identifier for the user. */
   id: string;
-  /** User's email address. */
   email: string;
-  /** User's role. */
   role: "admin" | "user";
 }
 
-/**
- * Expected response structure for successful authentication calls.
- */
+/** Auth API response structure */
 interface AuthResponse {
-  /** The authenticated user object. */
   user: User;
-  /** Authentication token (e.g., JWT). */
   token: string;
 }
 
-/**
- * Mock Authentication Service.
- *
- * Simulates backend API calls for login and registration.
- * Uses hardcoded credentials and timeouts.
- *
- * IMPORTANT: Replace this with actual API calls before production!
- */
+/** Mock Service for Authentication API calls */
 export const mockAuthService = {
-  /**
-   * Mock login function.
-   * Checks against hardcoded admin/user credentials.
-   */
+  /** Mock login */
   login: async (email: string, password: string): Promise<AuthResponse> => {
     console.log(`Mock Login Attempt: ${email}`);
-    await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate delay
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     if (email === "admin@example.com" && password === "admin123") {
       console.log("Mock Admin login success");
       return {
-        user: { id: "1", email: "admin@example.com", role: "admin" }, // Removed unnecessary 'as const'
+        user: { id: "1", email: "admin@example.com", role: "admin" },
         token: "mock-admin-token-xyz789",
       };
     }
     if (email === "user@example.com" && password === "user123") {
       console.log("Mock User login success");
       return {
-        user: { id: "2", email: "user@example.com", role: "user" }, // Removed unnecessary 'as const'
+        user: { id: "2", email: "user@example.com", role: "user" },
         token: "mock-user-token-abc123",
       };
     }
@@ -56,17 +37,13 @@ export const mockAuthService = {
     throw new Error("Invalid credentials");
   },
 
-  /**
-   * Mock registration function.
-   * Always succeeds for demonstration purposes.
-   */
+  /** Mock registration */
   register: async (email: string, password: string): Promise<AuthResponse> => {
     if (!email || !password) {
-      // Added simple validation check
       throw new Error("Mock Service: Email and password are required.");
     }
     console.log(`Mock Registration Attempt: ${email}`);
-    await new Promise((resolve) => setTimeout(resolve, 1200)); // Simulate longer delay
+    await new Promise((resolve) => setTimeout(resolve, 1200));
 
     const newUser: User = { id: `mock-${Date.now()}`, email, role: "user" };
     console.log("Mock Registration Success:", newUser);

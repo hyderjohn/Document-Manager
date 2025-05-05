@@ -1,11 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-/**
- * Layout for Authentication Pages (Login, Register).
- *
- * Displays a centered card on a gradient background where the specific
- * authentication form (Login or Register) is rendered using React Router's `<Outlet />`.
- */
+/** Layout for auth pages (Login, Register) */
 const AuthLayout = () => {
   return (
     // Full-height container, centers the card

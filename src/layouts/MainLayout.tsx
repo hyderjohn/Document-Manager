@@ -2,13 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from '../components/navigation/Navbar';
 import Sidebar from '../components/navigation/Sidebar';
 
-/**
- * Main Layout for Authenticated Users.
- *
- * Establishes the primary UI structure with a fixed top Navbar
- * and a fixed left Sidebar (on medium+ screens).
- * The main page content is rendered within the `<main>` element via `<Outlet />`.
- */
+/** Main layout for authenticated app sections */
 const MainLayout = () => {
   return (
     <div className="min-h-screen bg-gray-100">

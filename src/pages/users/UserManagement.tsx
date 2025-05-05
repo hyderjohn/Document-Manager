@@ -1,145 +1,108 @@
 import { useState } from 'react';
-import {
-  UserPlusIcon,
-  PencilIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
-import toast from 'react-hot-toast';
+import { UserPlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
 
-/**
- * Describes a user account in the system.
- */
+/** Structure for user account data */
 interface User {
-  id: string;         // Unique ID
-  email: string;      // Email address (acts as username)
-  role: 'admin' | 'user'; // User role
-  status: 'active' | 'inactive'; // Account status
-  lastLogin: string;  // ISO timestamp of last login
+  id: string;
+  email: string;
+  role: "admin" | "user";
+  status: "active" | "inactive";
+  lastLogin: string;
 }
 
-// Mock data for demonstration - should be replaced by API data fetching.
+// Mock data
 const mockUsers: User[] = [
   {
-    id: '1',
-    email: 'admin@example.com',
-    role: 'admin',
-    status: 'active',
-    lastLogin: '2024-02-20T10:00:00Z',
+    id: "1",
+    email: "admin@example.com",
+    role: "admin",
+    status: "active",
+    lastLogin: "2024-02-20T10:00:00Z",
   },
   {
-    id: '2',
-    email: 'user@example.com',
-    role: 'user',
-    status: 'active',
-    lastLogin: '2024-02-19T15:30:00Z',
+    id: "2",
+    email: "user@example.com",
+    role: "user",
+    status: "active",
+    lastLogin: "2024-02-19T15:30:00Z",
   },
   {
-    id: '3',
-    email: 'inactive@example.com',
-    role: 'user',
-    status: 'inactive',
-    lastLogin: '2024-02-18T09:15:00Z',
+    id: "3",
+    email: "inactive@example.com",
+    role: "user",
+    status: "inactive",
+    lastLogin: "2024-02-18T09:15:00Z",
   },
 ];
 
-/**
- * User Management Admin Page.
- *
- * Allows admins to view, add, delete, and manage user statuses.
- * Note: Current implementation uses local state and simulated API calls.
- *
- * Enhancements Needed:
- * - Fetch/manage user data via API (e.g., using react-query, RTK Query, or custom hooks).
- * - Implement user editing (e.g., change role, requires a form/modal).
- * - Add table features: pagination, searching, sorting.
- * - Improve loading and error state handling for API calls.
- */
+/** User Management Page (Admin) */
 const UserManagement = () => {
-  // Local state holding user data (replace with server state management)
   const [users, setUsers] = useState<User[]>(mockUsers);
-  // State to manage loading indicator for the Add User button
   const [isAddingUser, setIsAddingUser] = useState(false);
 
-  /**
-   * Mock handler for adding a new user.
-   */
+  /** Mock add user handler */
   const handleAddUser = async () => {
     setIsAddingUser(true);
-    const addToast = toast.loading('Adding user...');
+    const addToast = toast.loading("Adding user...");
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Create a mock new user
       const newUser: User = {
         id: `mock-${Date.now()}`,
         email: `newuser${Date.now().toString().slice(-4)}@example.com`,
-        role: 'user',
-        status: 'active',
+        role: "user",
+        status: "active",
         lastLogin: new Date().toISOString(),
       };
-      // Update local state
       setUsers((prev) => [...prev, newUser]);
       toast.dismiss(addToast);
-      toast.success('User added successfully');
+      toast.success("User added successfully");
     } catch (error) {
       console.error("Add user error:", error);
       toast.dismiss(addToast);
-      toast.error('Failed to add user');
+      toast.error("Failed to add user");
     } finally {
       setIsAddingUser(false);
     }
   };
 
-  /**
-   * Mock handler for deleting a user.
-   * @param id The ID of the user to delete.
-   */
+  /** Mock delete user handler */
   const handleDeleteUser = async (id: string) => {
-    // Example of optimistic update
     const originalUsers = users;
     setUsers((prev) => prev.filter((user) => user.id !== id));
-    const deleteToast = toast.loading('Deleting user...');
+    const deleteToast = toast.loading("Deleting user...");
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
       toast.dismiss(deleteToast);
-      toast.success('User deleted');
-    } catch (error) { // Handle potential API errors
+      toast.success("User deleted");
+    } catch (error) {
       console.error("Delete user error:", error);
       toast.dismiss(deleteToast);
-      toast.error('Failed to delete user');
-      // Rollback UI on error
+      toast.error("Failed to delete user");
       setUsers(originalUsers);
     }
   };
 
-  /**
-   * Mock handler for toggling user status (active/inactive).
-   * @param id The ID of the user to update.
-   */
+  /** Mock toggle user status handler */
   const handleToggleStatus = async (id: string) => {
-    // Find the current status to show appropriate loading message
-    const currentStatus = users.find(u => u.id === id)?.status;
-    const action = currentStatus === 'active' ? 'Deactivating' : 'Activating';
+    const currentStatus = users.find((u) => u.id === id)?.status;
+    const action = currentStatus === "active" ? "Deactivating" : "Activating";
     const statusToast = toast.loading(`${action} user...`);
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
-      // Update local state
       setUsers((prev) =>
         prev.map((user) =>
-          user.id === id ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' } : user
+          user.id === id ? { ...user, status: user.status === "active" ? "inactive" : "active" } : user
         )
       );
       toast.dismiss(statusToast);
-      toast.success('User status updated');
+      toast.success("User status updated");
     } catch (error) {
       console.error("Toggle status error:", error);
       toast.dismiss(statusToast);
-      toast.error('Failed to update user status');
-      // Note: No rollback here, as the state mapping itself didn't fail
+      toast.error("Failed to update user status");
     }
   };
 

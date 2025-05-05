@@ -2,40 +2,19 @@ import { Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
-/**
- * Defines the data required for the registration form.
- */
+/** Registration form data structure */
 export interface RegisterFormData {
-  /** User's email address. */
   email: string;
-  /** User's chosen password. */
   password: string;
-  /** Confirmation of the user's chosen password. */
   confirmPassword: string;
 }
 
-/**
- * Registration Page Component.
- *
- * Provides the UI for new user registration.
- * Leverages `react-hook-form` for validation (including password match)
- * and `useAuth` for handling the registration API call and loading state.
- */
+/** Registration Page */
 const Register = () => {
-  const { handleRegister, isLoading /*, authError */ } = useAuth();
+  const { handleRegister, isLoading } = useAuth();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormData>();
+  const password = watch("password"); // Needed for validation
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<RegisterFormData>();
-  const password = watch("password");
-
-  /**
-   * Form submission handler.
-   * Invokes the `handleRegister` function from `useAuth` with validated data.
-   */
   const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
     handleRegister(data);
   };
@@ -44,9 +23,7 @@ const Register = () => {
     <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="rounded-md shadow-sm -space-y-px">
         <div>
-          <label htmlFor="email" className="sr-only">
-            Email address
-          </label>
+          <label htmlFor="email" className="sr-only">Email address</label>
           <input
             {...register("email", {
               required: "Email is required",
@@ -62,9 +39,7 @@ const Register = () => {
           {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
         </div>
         <div>
-          <label htmlFor="password" className="sr-only">
-            Password
-          </label>
+          <label htmlFor="password" className="sr-only">Password</label>
           <input
             {...register("password", {
               required: "Password is required",
@@ -80,9 +55,7 @@ const Register = () => {
           {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
         </div>
         <div>
-          <label htmlFor="confirmPassword" className="sr-only">
-            Confirm Password
-          </label>
+          <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
           <input
             {...register("confirmPassword", {
               required: "Please confirm your password",

@@ -1,21 +1,13 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from '../../hooks/useAuth';
 
-/**
- * Props expected by the ProtectedRoute component.
- */
+/** ProtectedRoute props */
 interface ProtectedRouteProps {
   /** The content to render if the user is authenticated. */
   children: React.ReactNode;
 }
 
-/**
- * Wraps routes that require user authentication.
- *
- * Checks authentication status using the `useAuth` hook.
- * Renders the route's content (`children`) if logged in,
- * otherwise redirects to the `/login` page.
- */
+/** Route guard for authenticated users */
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // Get user status from the central auth hook
   const { loggedInUser } = useAuth();
